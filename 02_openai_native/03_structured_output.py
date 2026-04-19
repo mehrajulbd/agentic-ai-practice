@@ -25,5 +25,6 @@ response = client.responses.parse(
     text_format=Address,
 )
 
-address = response.output_parsed
+address : Address = response.output_parsed
+print("The user is from " + address.country)
 print(address.model_dump_json(indent=4))

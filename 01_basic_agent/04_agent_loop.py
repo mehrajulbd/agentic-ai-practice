@@ -22,14 +22,19 @@ def inventory_manager(action: str, item: str) -> str:
     item = item.lower()
     if action == "check":
         count = inventory.get(item, 0)
+        print(f"[TOOL] Checked {item}. Count: {count}")
         return f"You have {count} {item}(s)."
     
     if action == "consume":
         if inventory.get(item, 0) > 0:
             inventory[item] -= 1
+            print(f"[TOOL] Consumed 1 {item}. Remaining: {inventory[item]}")
             return f"Success: Used 1 {item}. Remaining: {inventory[item]}"
         else:
+            print(f"[TOOL] Failure: You don't have any {item}s left.")
             return f"Failure: You don't have any {item}s left."
+    
+    print(f"[TOOL] Invalid action: {action}")
     return "Invalid action."
 
 # 2. Setup Agent
