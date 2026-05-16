@@ -2,7 +2,6 @@ from openai import OpenAI
 from pydantic import BaseModel
 from typing import Literal, Optional
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 client = OpenAI()
@@ -26,17 +25,17 @@ def run_inventory_loop():
             break
 
         # 3. Call OpenAI with Response Format
-        completion = client.beta.chat.completions.parse(
+        completion = client.responses.parse(
             model="gpt-5-mini",
-            messages=[
+            input=[
                 {"role": "system", "content": f"You are an inventory assistant. Current items: {inventory}. Parse the user intent."},
                 {"role": "user", "content": user_prompt},
             ],
-            response_format=InventoryAction,
+            text_format=InventoryAction,
         )
 
         # 4. Extract Parsed Data
-        result = completion.choices[0].message.parsed
+        result : InventoryAction = completion.output_parsed
         item = result.item.lower()
         
         print(f"AI Thought: {result.thought_process}")

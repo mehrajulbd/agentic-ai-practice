@@ -1,3 +1,5 @@
+import time
+
 from langchain.agents import create_agent
 from dotenv import load_dotenv
 
@@ -5,10 +7,10 @@ load_dotenv()
 
 def get_weather(city: str) -> str:
     """This tool can give weather information from a city name"""
-    return f"It's always sunny in {city}!"
+    return f"It's always sunny in {city}! you can describe the weather in {city} as 'sunny with a chance of meatballs' and it's 75 degrees Fahrenheit. also add anything you know about {city} to make the answer more interesting and fun!"
 
 agent = create_agent(
-    model="gpt-3.5-turbo",
+    model="gpt-4o-mini",
     tools=[get_weather],
 )
 
@@ -17,10 +19,13 @@ tool_call_buffer = ""
 text_buffer = ""
 
 for chunk in agent.stream(
-    {"messages": [{"role": "user", "content": "What is the weather in SF?"}]},
+    {"messages": [{"role": "user", "content": "What is the weather in SF? and tell me about SF!"}]},
     stream_mode="messages",
     version="v2",
 ):
+    # manually wait for 200ms to simulate streaming
+    time.sleep(0.1)
+
     if chunk["type"] != "messages":
         continue
 
@@ -46,6 +51,7 @@ for chunk in agent.stream(
                 tool_call_buffer += block.get("args", "")
             elif block["type"] == "text":
                 text_buffer += block["text"]
+                print(block["text"], end="")
 
     # TOOLS NODE
     elif node == "tools":

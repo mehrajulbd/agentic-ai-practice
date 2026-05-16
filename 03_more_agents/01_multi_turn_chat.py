@@ -167,7 +167,7 @@ def run_turn(user_input: str):
         tools.append(register_user)
              
     agent = create_agent(
-        model="openrouter:google/gemma-4-31b-it:free",
+        model="gpt-4o-mini",
         tools=tools,
     )
 

@@ -27,4 +27,5 @@ response = client.responses.parse(
 
 address : Address = response.output_parsed
 print("The user is from " + address.country)
+print(f"user's postal code is {address.postal_code}")
 print(address.model_dump_json(indent=4))
