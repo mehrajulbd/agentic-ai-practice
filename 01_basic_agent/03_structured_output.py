@@ -19,3 +19,5 @@ agent = create_agent(model, system_prompt="You are an address parser, parse user
 
 response = agent.invoke({"messages": [("user", "148/D, Hi Rise Garden View, Khulshi Green Housing Society, Khulshi-4209, Chattogram, Bangladesh")]})
 print(response["messages"][-1].content)
+address : Address = response["structured_response"]
+print(address.city)

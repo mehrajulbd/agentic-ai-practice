@@ -8,3 +8,7 @@ __pycache__/
 *.sqlite
 *.log
 venv
+chroma*
+swe.txt
+*.toml
+*.lock

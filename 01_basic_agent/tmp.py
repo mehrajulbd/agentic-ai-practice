@@ -1,6 +1,7 @@
 import math
 from langchain_core.tools import tool
 from langchain_openrouter import ChatOpenRouter
+from langchain_ollama import ChatOllama
 from langchain.agents import create_agent
 from dotenv import load_dotenv
 
@@ -115,7 +116,8 @@ def enhance_base(item: str, quantity: int) -> str:
     return f"Upgraded {item} to quantity {game_state['base'][item]}. Remaining gold: {game_state['inventory']['gold']}."
 
 # 2. Setup Agent
-model = ChatOpenRouter(model="nvidia/nemotron-3-super-120b-a12b:free", temperature=0.2)
+model = ChatOpenRouter(model="qwen/qwen3-coder:free", temperature=0.2)
+# model = ChatOllama(model="gemma3:1b", temperature=0.2)
 tools = [train_army, check_game_state, attack_enemy, check_base, enhance_base]
 
 agent = create_agent(model, tools, system_prompt="You are an adventurer in a strategy game. Your goal is to manage your resources, train troops, enhance your base defenses, and attack enemies to win battles. Always use the provided tools to achieve your objectives. Always check your inventory and base status using tool calling before making decisions. Before attacking check the game state and then prepare my inventory and enemy inventory then call the tool to attack the enemy.")

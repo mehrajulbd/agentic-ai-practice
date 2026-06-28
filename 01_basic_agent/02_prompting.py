@@ -1,4 +1,5 @@
 # COT, Few Shot, React
+from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
 from dotenv import load_dotenv
@@ -8,6 +9,7 @@ from pydantic import BaseModel
 load_dotenv()
 
 model = ChatOpenAI(model="gpt-4o")
+# model = ChatOllama(model="gemma3:1b", temperature=0.2)
 agent = create_agent(model, system_prompt="Follow the user shown method to answer questions.")
 
 few_shot_prompt={
