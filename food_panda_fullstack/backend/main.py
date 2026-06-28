@@ -4,6 +4,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from chroma_helper import seed_rag_kb, get_kb_documents, delete_kb_document
 from streaming import stream_agent_events
+from ai_response import get_ai_response
 
 app = FastAPI()
 
@@ -34,6 +35,14 @@ class DocumentIngestRequest(BaseModel):
 class ChatStreamRequest(BaseModel):
     message: str
     delay_seconds: float = 0.12
+    
+class SupportChatRequest(BaseModel):
+    session_id: str
+    message: str
+    option_id: int
+
+
+sessions = {}
 
 @app.post("/kb/ingest")
 def ingest_doc(request: DocumentIngestRequest):
@@ -83,3 +92,29 @@ def chat_stream(request: ChatStreamRequest):
             "Connection": "keep-alive",
         },
     )
+
+
+@app.post("/chat")
+def chat(request: SupportChatRequest):
+    """
+    Handles a chat request and returns the agent's response.
+    """
+    if(request.session_id not in sessions):
+        sessions[request.session_id] = []
+        
+    res = get_ai_response(request, sessions[request.session_id])
+    
+        
+    sessions[request.session_id].append(("human", request.message))
+    sessions[request.session_id].append(("ai", res.message))
+    
+    messages = sessions[request.session_id]
+    
+    if res.is_completed:
+        sessions[request.session_id] = []
+    
+    return {
+        "ai_response" : res.message,
+        "is_completed": res.is_completed,
+        "chat_history": messages
+    }
