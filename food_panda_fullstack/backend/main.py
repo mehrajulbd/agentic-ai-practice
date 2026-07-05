@@ -41,7 +41,6 @@ class SupportChatRequest(BaseModel):
     message: str
     option_id: int
 
-
 sessions = {}
 
 @app.post("/kb/ingest")
@@ -110,11 +109,37 @@ def chat(request: SupportChatRequest):
     
     messages = sessions[request.session_id]
     
-    if res.is_completed:
-        sessions[request.session_id] = []
+    # if res.is_completed:
+    #     sessions[request.session_id] = []
     
     return {
         "ai_response" : res.message,
         "is_completed": res.is_completed,
         "chat_history": messages
+    }
+    
+@app.get("/chat/history/{session_id}")
+def get_chat_history(session_id: str):
+    """
+    Retrieves the chat history for a given session ID.
+    """
+    if session_id in sessions:
+        return {
+            "session_id": session_id,
+            "chat_history": sessions[session_id]
+        }
+    else:
+        return {
+            "session_id": session_id,
+            "chat_history": [],
+            "message": "No chat history found for this session."
+        }
+        
+@app.get("/sessions")
+def get_sessions():
+    """
+    Retrieves all active session IDs.
+    """
+    return {
+        "active_sessions": list(sessions.keys())
     }

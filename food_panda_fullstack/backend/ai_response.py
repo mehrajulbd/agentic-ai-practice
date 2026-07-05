@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 from refund import handle_refund
+from general_qs import handle_general_query
 
 class SupportChatRequest(BaseModel):
     session_id: str
@@ -26,7 +27,7 @@ def get_ai_response(user_request: SupportChatRequest, messages: list[tuple[str, 
     elif user_request.option_id == 4:
         print("2")
     elif user_request.option_id == 5:
-        print("2")
+        res, is_completed = handle_general_query(messages, user_request.message)
     elif user_request.option_id == 6:
         print("2")
     else:

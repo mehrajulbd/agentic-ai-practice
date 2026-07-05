@@ -26,8 +26,19 @@ def talk_to_human():
 @tool
 def complain_place():
     """This function allows the user to file a complaint about their order or refund."""
-    order_date = current_order.order_date
+    order_date = current_order.order_timestamp
     from datetime import datetime
+    # support timestamps provided as strings like "2023-10-01 12:00:00"
+    if isinstance(order_date, str):
+        try:
+            order_date = datetime.strptime(order_date, "%Y-%m-%d %H:%M:%S")
+        except Exception:
+            try:
+                order_date = datetime.fromisoformat(order_date)
+            except Exception:
+                print("[TOOL] Unable to parse order timestamp.")
+                return "Unable to parse order timestamp."
+
     current_date = datetime.now()
     diff_days = (current_date - order_date).days
     

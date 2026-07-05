@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useRef, useState } from "react";
 
 type StreamEventName =
@@ -275,8 +276,22 @@ export default function Home() {
                   visible side by side.
                 </p>
               </div>
-              <div className="rounded-full border border-stone-900/10 bg-stone-950 px-4 py-2 text-sm font-medium text-stone-50">
-                Status: {status}
+              <div className="flex flex-wrap items-center gap-3">
+                <Link
+                  href="/chat"
+                  className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-orange-300 hover:text-orange-700"
+                >
+                  Open chat UI
+                </Link>
+                <Link
+                  href="/kb"
+                  className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-orange-300 hover:text-orange-700"
+                >
+                  Manage KB docs
+                </Link>
+                <div className="rounded-full border border-stone-900/10 bg-stone-950 px-4 py-2 text-sm font-medium text-stone-50">
+                  Status: {status}
+                </div>
               </div>
             </div>
           </div>
